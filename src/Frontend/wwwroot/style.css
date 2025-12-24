@@ -1,0 +1,16 @@
+:root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+body { margin: 0; background: #0b1020; color: #e9eefc; }
+.container { max-width: 920px; margin: 0 auto; padding: 24px; }
+h1 { margin: 0 0 16px; font-size: 28px; }
+.card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 16px; padding: 16px; margin: 12px 0; }
+.row { display: flex; gap: 10px; align-items: center; margin: 10px 0; }
+label { width: 70px; opacity: 0.85; }
+input { flex: 1; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.05); color: #e9eefc; }
+button { padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.12); color: #e9eefc; cursor: pointer; }
+button:hover { background: rgba(255,255,255,0.18); }
+.muted { opacity: 0.75; margin: 8px 0 0; }
+#orders { margin-top: 12px; display: grid; gap: 10px; }
+.order { padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); display: flex; justify-content: space-between; gap: 10px; }
+.badge { padding: 3px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); }
+.toasts { position: fixed; right: 12px; bottom: 12px; display: grid; gap: 10px; width: 320px; }
+.toast { padding: 12px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.18); background: rgba(20, 25, 45, 0.95); }

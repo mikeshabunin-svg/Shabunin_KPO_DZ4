@@ -1,0 +1,130 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+    - 25672:5672
+    - 25673:15672
+    networks:
+      gozon:
+        aliases:
+        - rabbitmq
+  redis:
+    image: redis:7
+    ports:
+    - 16379:6379
+    networks:
+      gozon:
+        aliases:
+        - redis
+  orders-db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: orders
+    ports:
+    - 15433:5432
+    networks:
+      gozon:
+        aliases:
+        - orders-db
+  payments-db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: payments
+    ports:
+    - 15434:5432
+    networks:
+      gozon:
+        aliases:
+        - payments-db
+  orders-1:
+    build:
+      context: ./src/OrdersService
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      CONNECTION_STRING: Host=orders-db;Port=5432;Database=orders;Username=postgres;Password=postgres
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      REDIS_CONNECTION: redis:6379
+    depends_on:
+    - rabbitmq
+    - orders-db
+    - redis
+    networks:
+      gozon:
+        aliases:
+        - orders-1
+    restart: unless-stopped
+  orders-2:
+    build:
+      context: ./src/OrdersService
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      CONNECTION_STRING: Host=orders-db;Port=5432;Database=orders;Username=postgres;Password=postgres
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      REDIS_CONNECTION: redis:6379
+    depends_on:
+    - rabbitmq
+    - orders-db
+    - redis
+    networks:
+      gozon:
+        aliases:
+        - orders-2
+    restart: unless-stopped
+  payments:
+    build:
+      context: ./src/PaymentsService
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      CONNECTION_STRING: Host=payments-db;Port=5432;Database=payments;Username=postgres;Password=postgres
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+    depends_on:
+    - rabbitmq
+    - payments-db
+    networks:
+      gozon:
+        aliases:
+        - payments
+    restart: unless-stopped
+  gateway:
+    build:
+      context: ./src/ApiGateway
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+    - orders-1
+    - payments
+    - frontend
+    ports:
+    - 18080:8080
+    networks:
+      gozon:
+        aliases:
+        - gateway
+    restart: unless-stopped
+  frontend:
+    build:
+      context: ./src/Frontend
+      dockerfile: Dockerfile
+    ports:
+    - 18081:80
+    networks:
+      gozon:
+        aliases:
+        - frontend
+networks:
+  gozon:
+    driver: bridge

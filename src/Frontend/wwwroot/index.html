@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GoZon — Realtime Orders</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>GoZon — отслеживание заказа</h1>
+
+    <section class="card">
+      <h2>Подключение</h2>
+      <div class="row">
+        <label>UserId</label>
+        <input id="userId" placeholder="например u1" />
+        <button id="btnConnect">Подключиться</button>
+      </div>
+      <div class="row">
+        <button id="btnAskNotify">Разрешить push-уведомления</button>
+      </div>
+      <p class="muted">WebSocket (SignalR): <code>/orders/ws/orders?userId=...</code></p>
+    </section>
+
+    <section class="card">
+      <h2>Создать заказ</h2>
+      <div class="row">
+        <label>Price</label>
+        <input id="price" type="number" value="100" />
+        <button id="btnCreateOrder">Создать</button>
+      </div>
+      <p class="muted">POST <code>/orders/api/orders</code></p>
+    </section>
+
+    <section class="card">
+      <h2>Заказы</h2>
+      <button id="btnRefresh">Обновить список</button>
+      <div id="orders"></div>
+    </section>
+
+    <div id="toasts" class="toasts"></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@8.0.8/dist/browser/signalr.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
